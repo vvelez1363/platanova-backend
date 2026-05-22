@@ -3,8 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const admin = require("firebase-admin");
 
+const serviceAccountBuffer = Buffer.from(
+  process.env.FIREBASE_SERVICE_ACCOUNT,
+  "base64",
+);
+const serviceAccount = JSON.parse(serviceAccountBuffer.toString("utf8"));
+
 admin.initializeApp({
-  credential: admin.credential.cert(require("../serviceAccount.json")),
+  credential: admin.credential.cert(serviceAccount),
   projectId: process.env.FIREBASE_PROJECT_ID,
 });
 
