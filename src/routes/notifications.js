@@ -17,16 +17,22 @@ async function guardarNotificacion(
   tipo,
   descripcion,
   prioridad = "media",
+  extras = {},
 ) {
   const now = new Date();
-  await db.collection("users").doc(toUserId).collection("notifications").add({
-    tipo,
-    descripcion,
-    estado: "activa",
-    prioridad,
-    fecha: now,
-    creado_en: now,
-  });
+  await db
+    .collection("users")
+    .doc(toUserId)
+    .collection("notifications")
+    .add({
+      tipo,
+      descripcion,
+      estado: "activa",
+      prioridad,
+      fecha: now,
+      creado_en: now,
+      ...extras,
+    });
 }
 
 // ─── POST /notifications/chat ─────────────────────────────────────────────────
@@ -54,6 +60,7 @@ router.post("/chat", async (req, res) => {
         "comentario",
         `${fromUserName}: ${messagePreview}`,
         "media",
+        { offerId, chatId },
       ),
     ]);
 
