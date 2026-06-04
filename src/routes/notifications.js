@@ -57,10 +57,14 @@ router.post("/chat", async (req, res) => {
       }),
       guardarNotificacion(
         toUserId,
-        "comentario",
+        "chat", // 💡 CAMBIO: Usa "chat" en lugar de "comentario" para que coincida con tu mapeo de Flutter
         `${fromUserName}: ${messagePreview}`,
         "media",
-        { offerId, chatId },
+        {
+          offerId: offerId,
+          chatId: chatId,
+          creadoEn: new Date(), // 💡 CAMBIO: Forzamos Camel Case por si el helper usa snake_case
+        },
       ),
     ]);
 
