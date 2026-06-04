@@ -49,21 +49,27 @@ router.post("/chat", async (req, res) => {
     if (!playerId)
       return res.status(404).json({ error: "Player ID no encontrado" });
 
+    // Armamos la fecha actual de forma limpia
+    const now = new Date();
+
     await Promise.all([
+      // Enviar a OneSignal para la alerta push nativa
       sendToPlayers([playerId], `💬 ${fromUserName}`, messagePreview, {
         type: "chat",
         targetId: chatId,
         offerId,
       }),
+
+      // Guardar en la base de datos de Firestore del usuario
       guardarNotificacion(
         toUserId,
-        "chat", // 💡 CAMBIO: Usa "chat" en lugar de "comentario" para que coincida con tu mapeo de Flutter
+        "chat",
         `${fromUserName}: ${messagePreview}`,
         "media",
         {
           offerId: offerId,
           chatId: chatId,
-          creadoEn: new Date(), // 💡 CAMBIO: Forzamos Camel Case por si el helper usa snake_case
+          creadoEn: now,
         },
       ),
     ]);
