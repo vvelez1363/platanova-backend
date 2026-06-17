@@ -20,6 +20,7 @@ async function guardarNotificacion(
   extras = {},
 ) {
   const now = new Date();
+
   await db
     .collection("users")
     .doc(toUserId)
@@ -27,14 +28,14 @@ async function guardarNotificacion(
     .add({
       tipo,
       descripcion,
-      estado: "activa",
+      leido: false,
       prioridad,
-      fecha: now,
-      creado_en: now,
+      creadoEn: now,
       ...extras,
     });
 }
 
+// ─── POST /notifications/chat ─────────────────────────────────────────────────
 // ─── POST /notifications/chat ─────────────────────────────────────────────────
 router.post("/chat", async (req, res) => {
   try {
@@ -49,27 +50,21 @@ router.post("/chat", async (req, res) => {
     if (!playerId)
       return res.status(404).json({ error: "Player ID no encontrado" });
 
-    // Armamos la fecha actual de forma limpia
-    const now = new Date();
-
     await Promise.all([
-      // Enviar a OneSignal para la alerta push nativa
       sendToPlayers([playerId], `💬 ${fromUserName}`, messagePreview, {
         type: "chat",
         targetId: chatId,
         offerId,
       }),
 
-      // Guardar en la base de datos de Firestore del usuario
       guardarNotificacion(
         toUserId,
-        "chat",
+        "comentario",
         `${fromUserName}: ${messagePreview}`,
         "media",
         {
           offerId: offerId,
           chatId: chatId,
-          creadoEn: now,
         },
       ),
     ]);
