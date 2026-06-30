@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const admin = require("firebase-admin");
+const moderationRouter = require("./routes/moderation");
 
 const serviceAccountBuffer = Buffer.from(
   process.env.FIREBASE_SERVICE_ACCOUNT,
@@ -19,6 +20,7 @@ console.log("✅ Firebase Admin inicializado");
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/moderation", moderationRouter);
 
 app.use("/notifications", require("./routes/notifications"));
 
