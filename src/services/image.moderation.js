@@ -13,7 +13,7 @@ async function loadModel() {
 }
 
 const BLOCKED_CATEGORIES = ["Porn", "Hentai", "Sexy"];
-const BLOCK_THRESHOLD = 0.65;
+const BLOCK_THRESHOLD = 0.3;
 
 async function moderateImage(imageBuffer) {
   try {

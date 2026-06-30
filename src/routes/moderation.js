@@ -16,6 +16,7 @@ router.post("/text", async (req, res) => {
 
 // POST /moderation/image
 router.post("/image", upload.single("file"), async (req, res) => {
+  console.log("🔍 Moderando imagen...");
   if (!req.file)
     return res.status(400).json({ error: "No se recibió archivo" });
   const result = await moderateImage(req.file.buffer);
